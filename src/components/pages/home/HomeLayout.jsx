@@ -7,7 +7,7 @@ const HomeLayout = () => {
   return (
     <>
       {pathname === "/" && <Header />}
-      <main className="grow mb-10 flex flex-col gap-10">
+      <main className="grow mb-10 flex flex-col gap-10 md:gap-20">
         <Outlet />
       </main>
     </>

@@ -50,3 +50,13 @@
     text-stroke: 2px white;
   }
 }
+
+.scrollable {
+  overflow-x: scroll; /* Enable horizontal scrolling */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+
+/* For WebKit browsers */
+.scrollable::-webkit-scrollbar {
+  display: none; /* Hide scrollbar */
+}

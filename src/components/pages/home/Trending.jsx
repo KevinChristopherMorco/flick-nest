@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TrendingFilter from "./filters/TrendingFilter";
 import {
   IconChevronCompactLeft,
@@ -15,25 +15,53 @@ const Trending = () => {
   const { descVisibility, ascVisibility } = isVisible;
 
   const handleScroll = (event) => {
+    console.log(ref.current.scrollWidth);
+
     const { id } = event.target;
     setScroll(ref.current.scrollLeft);
 
-    switch (id) {
-      case "scrollToLeft":
-        ref.current.scrollLeft -= 400;
-        break;
+    if (id === "scrollToLeft") {
+      if (scroll === 0) return;
+      setScroll((prev) => {
+        return (ref.current.scrollLeft = prev - 400);
+      });
+    }
 
-      case "scrollToRight":
-        ref.current.scrollLeft += 400;
-
-        break;
-      default:
-        break;
+    if (id === "scrollToRight") {
+      if (scroll >= ref.current.scrollWidth) return;
+      setScroll((prev) => {
+        return (ref.current.scrollLeft = prev + 400);
+      });
     }
   };
 
+  useEffect(() => {
+    setIsVisible((prev) => {
+      if (scroll === 0) {
+        return {
+          descVisibility: false,
+          ascVisibility: true,
+        };
+      }
+
+      if (scroll >= ref.current.scrollWidth) {
+        return {
+          descVisibility: true,
+          ascVisibility: false,
+        };
+      }
+
+      return {
+        descVisibility: true,
+        ascVisibility: true,
+      };
+    });
+
+    console.log(scroll);
+  }, [scroll]);
+
   return (
-    <section className="w-full flex flex-col gap-6">
+    <section className="w-full flex flex-col gap-6 md:gap-10">
       <p className="px-8 md:px-12 text-lg font-bold">Trending Now</p>
       <TrendingFilter />
       <div className="flex items-stretch">
@@ -45,7 +73,7 @@ const Trending = () => {
           />
         </div>
         <ul
-          className="px-4 md:px-8 w-full flex gap-8 overflow-x-scroll scroll-smooth"
+          className="scrollable px-4 md:px-8 w-full flex gap-8 overflow-x-scroll scroll-smooth"
           onScroll={handleScroll}
           ref={ref}
         >
@@ -55,7 +83,7 @@ const Trending = () => {
               return (
                 <li
                   key={index}
-                  className="flex-none w-[8rem] relative transition-transform hover:scale-110"
+                  className="flex-none w-[8rem] md:w-[9rem] relative transition-transform hover:scale-110"
                 >
                   <img
                     src="https://m.media-amazon.com/images/M/MV5BNjE0NjIwMzAwOF5BMl5BanBnXkFtZTgwOTIyMzMzMDE@._V1_SX300.jpg"
