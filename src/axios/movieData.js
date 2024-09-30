@@ -29,4 +29,4 @@ const movieData = () => {
   return { response, isLoading };
 };
 
-export default OMDB;
+export default movieData;
