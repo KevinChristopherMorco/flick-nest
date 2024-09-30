@@ -56,8 +56,6 @@ const Trending = () => {
         ascVisibility: true,
       };
     });
-
-    console.log(scroll);
   }, [scroll]);
 
   return (
