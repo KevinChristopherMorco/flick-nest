@@ -5,58 +5,18 @@ import {
   IconChevronCompactRight,
 } from "@tabler/icons-react";
 
+import useMovieData from "../../../hooks/axios/useMovieData";
+import useScroll from "../../../hooks/home/useScroll";
+
+import TrendModal from "./modal/TrendModal";
+
 const Trending = () => {
-  const ref = useRef(null);
-  let [scroll, setScroll] = useState(0);
-  const [isVisible, setIsVisible] = useState({
-    descVisibility: true,
-    ascVisibility: true,
-  });
-  const { descVisibility, ascVisibility } = isVisible;
+  const { response } = useMovieData();
 
-  const handleScroll = (event) => {
-    console.log(ref.current.scrollWidth);
+  const [modalIsOpen, setModal] = useState(false);
+  const [modalData, setModalData] = useState(false);
 
-    const { id } = event.target;
-    setScroll(ref.current.scrollLeft);
-
-    if (id === "scrollToLeft") {
-      if (scroll === 0) return;
-      setScroll((prev) => {
-        return (ref.current.scrollLeft = prev - 400);
-      });
-    }
-
-    if (id === "scrollToRight") {
-      if (scroll >= ref.current.scrollWidth) return;
-      setScroll((prev) => {
-        return (ref.current.scrollLeft = prev + 400);
-      });
-    }
-  };
-
-  useEffect(() => {
-    setIsVisible((prev) => {
-      if (scroll === 0) {
-        return {
-          descVisibility: false,
-          ascVisibility: true,
-        };
-      }
-
-      if (scroll >= ref.current.scrollWidth) {
-        return {
-          descVisibility: true,
-          ascVisibility: false,
-        };
-      }
-
-      return {
-        descVisibility: true,
-        ascVisibility: true,
-      };
-    });
-  }, [scroll]);
+  const { scrollRef, ascVisibility, handleScroll } = useScroll();
 
   return (
     <section className="w-full flex flex-col gap-6 md:gap-10">
@@ -73,27 +33,29 @@ const Trending = () => {
         <ul
           className="scrollable px-4 md:px-8 w-full flex gap-8 overflow-x-scroll scroll-smooth"
           onScroll={handleScroll}
-          ref={ref}
+          ref={scrollRef}
         >
-          {Array(10)
-            .fill()
-            .map((_, index) => {
-              return (
-                <li
-                  key={index}
-                  className="flex-none w-[8rem] md:w-[9rem] relative transition-transform hover:scale-110"
-                >
-                  <img
-                    src="https://m.media-amazon.com/images/M/MV5BNjE0NjIwMzAwOF5BMl5BanBnXkFtZTgwOTIyMzMzMDE@._V1_SX300.jpg"
-                    alt=""
-                    className="w-full h-full rounded-lg"
-                  />
-                  <p className="highlight-number text-7xl text-black absolute -left-6 bottom-2 text-stroke font-extrabold">
-                    {index + 1}
-                  </p>
-                </li>
-              );
-            })}
+          {response.results.map((movieTrend, index) => {
+            return (
+              <li
+                key={index}
+                className="flex-none w-[8rem] md:w-[9rem] relative transition-transform cursor-pointer hover:scale-110"
+                onClick={() => {
+                  setModalData(movieTrend);
+                  setModal(true);
+                }}
+              >
+                <img
+                  src={`http://image.tmdb.org/t/p/w500/${movieTrend.poster_path}`}
+                  alt=""
+                  className="w-full h-full rounded-lg"
+                />
+                <p className="highlight-number text-7xl text-black absolute -left-6 bottom-2 text-stroke font-extrabold">
+                  {index + 1}
+                </p>
+              </li>
+            );
+          })}
         </ul>
         <div className="flex items-center font-bold bg-black">
           <IconChevronCompactRight
@@ -103,6 +65,13 @@ const Trending = () => {
           />
         </div>
       </div>
+      {modalIsOpen && (
+        <TrendModal
+          modalData={modalData}
+          modalIsOpen={modalIsOpen}
+          setModal={setModal}
+        />
+      )}
     </section>
   );
 };

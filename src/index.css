@@ -36,7 +36,7 @@
   }
 
   #root {
-    @apply min-h-full flex flex-col bg-black text-[var(--text-color)];
+    @apply min-h-full flex flex-col relative bg-black text-[var(--text-color)];
   }
 
   .highlight-number {

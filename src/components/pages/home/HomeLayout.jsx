@@ -1,18 +1,18 @@
 import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Header from "../../partials/Header";
-import OMDB from "../../../axios/movieData";
+import useMovieData from "../../../hooks/axios/useMovieData";
 
 const HomeLayout = () => {
   const { pathname } = useLocation();
-  const { response, isLoading } = OMDB();
+  const { response, isLoading } = useMovieData();
 
   if (isLoading) {
     return (
       <div role="status">
         <svg
           aria-hidden="true"
-          class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-[var(--brand-color)]"
+          className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-[var(--brand-color)]"
           viewBox="0 0 100 101"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +26,7 @@ const HomeLayout = () => {
             fill="currentFill"
           />
         </svg>
-        <span class="sr-only">Loading...</span>
+        <span className="sr-only">Loading...</span>
       </div>
     );
   }

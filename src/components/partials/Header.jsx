@@ -2,7 +2,7 @@ import React from "react";
 
 const Header = () => {
   return (
-    <nav className="w-full fixed z-[999]">
+    <nav className="w-full fixed bg-black bg-opacity-80 z-[999]">
       <div className="p-4 flex items-center">
         <span className="text-[var(--brand-color)] text-4xl md:text-5xl font-bold">
           F
